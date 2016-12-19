@@ -2,7 +2,6 @@ import sys
 import os
 import numpy as np
 import tensorflow as tf
-from libs import utils, gif, datasets, dataset_utils, nb_utils
 from collections import OrderedDict
 from IPython.core.debugger import Tracer
 
@@ -26,7 +25,7 @@ class Wodehouse():
         self.decoder = OrderedDict(zip(range(len(self.vocab)), self.vocab))
 
         # Number of sequences in a mini batch
-        self.batch_size = 100
+        self.batch_size = 50
 
         # Number of characters in a sequence
         self.sequence_length = 50
@@ -35,7 +34,7 @@ class Wodehouse():
         self.n_cells = 128
 
         # Number of LSTM layers
-        self.n_layers = 3
+        self.n_layers = 2
 
         # Total number of characters in the one-hot encoding
         self.n_chars = len(self.vocab)
@@ -108,7 +107,7 @@ class Wodehouse():
 
         # Create optimizer
         with tf.name_scope('optimizer'):
-            self.optimizer = tf.train.AdamOptimizer(learning_rate=0.001)
+            self.optimizer = tf.train.AdamOptimizer(learning_rate=0.00001)
             self.gradients = []
 
             # notice clipping of gradient
@@ -122,6 +121,7 @@ class Wodehouse():
     def train(self):
 
         checkpoint_dir = "checkpoints"
+        model_dir = "export"
         ckpt_name = "wodehouse.ckpt"
         checkpoint_path = os.path.join(checkpoint_dir, ckpt_name)
 
@@ -133,7 +133,7 @@ class Wodehouse():
 
             cursor = 0
             it_i = 0
-            while True:
+            while it_i < 1000001:
                 Xs, Ys = [], []
                 for batch_i in range(self.batch_size):
                     if (cursor + self.sequence_length) >= len(self.txt) - self.sequence_length - 1:
@@ -174,3 +174,6 @@ class Wodehouse():
                         print([decoder[ch] for ch in ps])
 
                 it_i += 1
+            if not os.path.isdir(model_dir):
+                os.makedirs(model_dir)
+                saver.save(sess, os.path.join(model_dir, 'export'))
