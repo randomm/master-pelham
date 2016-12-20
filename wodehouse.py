@@ -55,7 +55,7 @@ class Wodehouse():
                   for seq in tf.split(1, self.sequence_length, self.Xs)]
 
         # Connect timesteps to LSTM cells
-        self.cells = tf.nn.rnn_cell.BasicLSTMCell(num_units=self.n_cells, state_is_tuple=True, forget_bias=1.0)
+        self.cells = tf.nn.rnn_cell.BasicLSTMCell(num_units=self.n_cells, state_is_tuple=True, forget_bias=0.6)
 
         # Set initial_size at all zeros
         self.initial_state = self.cells.zero_state(tf.shape(self.X)[0], tf.float32)
@@ -106,11 +106,11 @@ class Wodehouse():
 
         # Create optimizer
         with tf.name_scope('optimizer'):
-            self.optimizer = tf.train.AdamOptimizer(learning_rate=0.001)
+            self.optimizer = tf.train.AdamOptimizer(learning_rate=0.006)
             self.gradients = []
 
             # notice clipping of gradient
-            self.clip = tf.constant(5.0, name="clip")
+            self.clip = tf.constant(2.0, name="clip")
             for grad, var in self.optimizer.compute_gradients(self.mean_loss):
                 self.gradients.append((tf.clip_by_value(grad, -self.clip, self.clip), var))
             self.updates = self.optimizer.apply_gradients(self.gradients)
