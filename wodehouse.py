@@ -3,14 +3,13 @@ import os
 import numpy as np
 import tensorflow as tf
 from collections import OrderedDict
-from IPython.core.debugger import Tracer
 
 class Wodehouse():
     def __init__(self):
         # load source material
         self.script = './wodehouse.txt'
         self.txts = []
-        with open(self.script, 'r') as fp:
+        with open(self.script, 'r', encoding="utf-8") as fp:
             self.txt = fp.read()
         self.txt = "\n".join([txt_i.strip()
                          for txt_i in self.txt.replace('\t', '').split('\n')
@@ -107,7 +106,7 @@ class Wodehouse():
 
         # Create optimizer
         with tf.name_scope('optimizer'):
-            self.optimizer = tf.train.AdamOptimizer(learning_rate=0.00001)
+            self.optimizer = tf.train.AdamOptimizer(learning_rate=0.001)
             self.gradients = []
 
             # notice clipping of gradient
@@ -155,9 +154,6 @@ class Wodehouse():
                     # Save the variables to disk.
                     save_path = saver.save(sess, checkpoint_path, global_step=it_i)
                     print("Model saved in file: %s" % save_path)
-
-                    #Tracer()()
-                    #p = sess.run(self.probs, feed_dict={self.X: np.array(Xs[-1])[np.newaxis]})
 
                     p = sess.run(self.probs, feed_dict={self.X: Xs})
                     ps = [np.random.choice(range(self.n_chars), p=p_i.ravel())
