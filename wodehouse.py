@@ -30,10 +30,10 @@ class Wodehouse():
         self.sequence_length = 50
 
         # Number of cells in our LSTM layer
-        self.n_cells = 128
+        self.n_cells = 512
 
         # Number of LSTM layers
-        self.n_layers = 2
+        self.n_layers = 4
 
         # Total number of characters in the one-hot encoding
         self.n_chars = len(self.vocab)
@@ -106,7 +106,7 @@ class Wodehouse():
 
         # Create optimizer
         with tf.name_scope('optimizer'):
-            self.optimizer = tf.train.AdamOptimizer(learning_rate=0.006)
+            self.optimizer = tf.train.AdamOptimizer(learning_rate=0.0003)
             self.gradients = []
 
             # notice clipping of gradient
