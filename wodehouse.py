@@ -86,7 +86,7 @@ class Wodehouse():
         # Reinitialize initial_state using new depth of cells
         self.initial_state = cells.zero_state(tf.shape(self.X)[0], tf.float32)
 
-        cells = tf.nn.rnn_cell.DropoutWrapper(cells, output_keep_prob=keep_prob)
+        cells = tf.nn.rnn_cell.DropoutWrapper(cells, output_keep_prob=self.keep_prob)
 
         # Create RNN using cells, input data and initial_state
         outputs, self.final_state = tf.nn.rnn(cell=cells, inputs=Xs, initial_state=self.initial_state)
