@@ -128,7 +128,7 @@ class Wodehouse():
             gradients = []
 
             # notice clipping of gradient
-            clip = tf.constant(2.0, name="clip")
+            clip = tf.constant(10.0, name="clip")
             for grad, var in optimizer.compute_gradients(self.mean_loss):
                 gradients.append((tf.clip_by_value(grad, -clip, clip), var))
             self.updates = optimizer.apply_gradients(gradients)
@@ -177,8 +177,6 @@ class Wodehouse():
                     if isinstance(self.txt[0], str):
                         print('original:', "".join(
                             [self.decoder[ch] for ch in Xs[-1]]))
-                        print('synth(samp):', "".join(
-                            [self.decoder[ch] for ch in ps]))
                         print('synth(amax):', "".join(
                             [self.decoder[ch] for ch in p]))
                     else:
