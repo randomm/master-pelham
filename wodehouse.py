@@ -174,7 +174,7 @@ class Wodehouse():
                     save_path = saver.save(sess, checkpoint_path, global_step=it_i)
                     print("Model saved in file: %s" % save_path)
 
-                    p = sess.run(self.probs, feed_dict={self.X: Xs})
+                    p = sess.run(self.probs, feed_dict={self.X: Xs, self.keep_prob: 1.0})
                     ps = [np.random.choice(range(self.n_chars), p=p_i.ravel())
                           for p_i in p]
                     p = [np.argmax(p_i) for p_i in p]
