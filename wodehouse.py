@@ -17,7 +17,7 @@ class Wodehouse():
             self.export_limit = 10000 # iterations after which model is exported
 
             # load source material
-            self.script = './xaa'
+            self.script = './wodehouse.txt'
             self.txts = []
             with open(self.script, 'r', encoding="utf-8") as fp:
                 self.txt = fp.read()
@@ -40,10 +40,10 @@ class Wodehouse():
             self.sequence_length = 50
 
             # Number of cells in our LSTM layer
-            n_cells = 64
+            n_cells = 512
 
             # Number of LSTM layers
-            n_layers = 2
+            n_layers = 3
 
             # Total number of characters in the one-hot encoding
             self.n_chars = len(self.vocab)
