@@ -59,6 +59,7 @@ class Wodehouse():
         # placeholders
         self.X = tf.placeholder(tf.int32, shape=[None,sequence_length], name='X')
         self.Y = tf.placeholder(tf.int32, shape=[None,sequence_length], name='Y')
+        self.keep_prob = tf.placeholder(tf.float32, name='keep_prob')
 
         # we first create a variable to take us from our one-hot representation to our LSTM cells
         embedding = tf.get_variable("embedding", [self.n_chars, n_cells])
@@ -84,6 +85,8 @@ class Wodehouse():
 
         # Reinitialize initial_state using new depth of cells
         self.initial_state = cells.zero_state(tf.shape(self.X)[0], tf.float32)
+
+        cells = tf.nn.rnn_cell.DropoutWrapper(cells, output_keep_prob=keep_prob)
 
         # Create RNN using cells, input data and initial_state
         outputs, self.final_state = tf.nn.rnn(cell=cells, inputs=Xs, initial_state=self.initial_state)
@@ -139,6 +142,7 @@ class Wodehouse():
 
         checkpoint_path = os.path.join(self.checkpoint_dir, self.ckpt_name)
 
+        keep_prob = 0.9
         saver = tf.train.Saver()
         sm = tf.train.SessionManager()
         init = tf.initialize_all_variables()
@@ -161,7 +165,7 @@ class Wodehouse():
                 Xs = np.array(Xs).astype(np.int32)
                 Ys = np.array(Ys).astype(np.int32)
 
-                loss_val, _ = sess.run([self.mean_loss, self.updates], feed_dict={self.X: Xs, self.Y: Ys})
+                loss_val, _ = sess.run([self.mean_loss, self.updates], feed_dict={self.X: Xs, self.Y: Ys, self.keep_prob: keep_prob})
                 if it_i % 10 == 0:
                     print(it_i, loss_val)
 
