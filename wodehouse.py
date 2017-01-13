@@ -225,7 +225,7 @@ class Wodehouse():
             # We'll create a feed_dict parameter which includes what to
             # input to the network, model['X'], as well as setting
             # dropout to 1.0, meaning no dropout.
-            feed_dict = {self.X: [synth[-1]]}
+            feed_dict = {self.X: [synth[-1]], self.keep_prob: 1.0}
 
             # Now we'll check if we currently have a state as a result
             # of a previous inference, and if so, add to our feed_dict
